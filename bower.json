@@ -1,0 +1,20 @@
+{
+  "name": "asdfjs-point-detector",
+  "version": "0.0.1",
+  "authors": [
+    "reyviece@gmail.com",
+    "kienaikizna@gmail.com"
+  ],
+  "main": "asdfjs-point-detector.js",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "asdfjs": "*"
+  }
+}
