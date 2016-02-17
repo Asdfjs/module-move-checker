@@ -5,7 +5,7 @@ describe('Test PointDetector by touch event information.', function() {
         i;
 
     beforeEach(function() {
-        pd = new window.Asdf.module.PointDetector({});
+        pd = new window.Asdf.module.pointDetector;
         // event mock (10, 0) -> (408, 199)
         pl = [];
         event = {};
@@ -104,42 +104,6 @@ describe('Test PointDetector by touch event information.', function() {
         it('flick event uprise.', function() {
             pd.extractType(event);
             expect(pd.type).toBe('flick');
-        });
-
-        it('flick event uprise.', function() {
-            event.start = 1000;
-            event.end = 1005;
-            pd.extractType(event);
-            expect(pd.type).toBe('flick');
-        });
-
-        it('click event uprise.', function(done) {
-            event.start = 1000;
-            event.end = 1100;
-            event.list.push({
-                x: 11,
-                y: 5
-            });
-            pd.extractType(event);
-            setTimeout(function() {
-                expect(pd.type).toBe('click');
-                done();
-            }, 1000);
-        });
-
-        it('double click event uprise.', function(done) {
-            event.start = 1000;
-            event.end = 1100;
-            event.list.push({
-                x: 11,
-                y: 5
-            });
-            pd.extractType(event);
-            pd.extractType(event);
-            setTimeout(function() {
-                expect(pd.type).toBe('dbclick');
-                done();
-            }, 1000);
         });
 
         it('ignore event(return none)', function() {

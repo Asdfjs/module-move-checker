@@ -21,14 +21,14 @@ if (!window.Asdf.module) {
     /**
      * To find out it's flick or click or nothing from event datas.
      * @example
-     * var PointDetector = new $_.module.PointDetector
+     * $_.module.pointDetector.setup({
      *      flickTime: 300, // time to check flick
      *      flickRange: 250, // range(distance) to check flick
      *      clickTime: 200, // time to check click
      *      minDist: 15 // range(distance) to check movement
      * });
      */
-    $_.module.PointDetector = $_.Base.Class(/** @lends $_.module.PointDetector.prototype */{
+    $_.module.pointDetector = /** @lends $_.module.PointDetector */{
         /**
          * set options
          * @param {object} option
@@ -37,7 +37,7 @@ if (!window.Asdf.module) {
          *      @param {number} [option.clickTime] time to check click
          *      @param {number} [option.minDist] distance to check movement
          */
-        initialize: function(option) {
+        setup: function(option) {
             this.flickTime = option.flickTime || FLICK_DEFAULT_OPTIONS.TIME;
             this.flickRange = option.flickRange || FLICK_DEFAULT_OPTIONS.RANGE;
             this.clickTime = option.clickTime || FLICK_DEFAULT_OPTIONS.CLICKTIME;
@@ -45,19 +45,19 @@ if (!window.Asdf.module) {
             this.clickTimer = null;
             this.type = null;
         },
+
         /**
          * pick event type from eventData
-         * @param {object} eventData event Data
+         * @param {object}  points A point data
          * @return {object}
          */
-        figure: function(eventData) {
-            var direction = this.getDirection(eventData.list);
-            this.extractType(eventData);
+        figure: function(points) {
             return {
-                direction : direction,
-                type: this.type
+                direction : this.getDirection(points.list),
+                type: this.extractType(points);
             };
         },
+
         /**
          * return direction figured out
          * @param {array} list eventPoint List
@@ -68,9 +68,9 @@ if (!window.Asdf.module) {
                 final = list[list.length-1],
                 cardinalPoint = this.getCardinalPoints(first, final),
                 res = this.getNearestPoint(first, final, cardinalPoint);
-
             return res;
         },
+
         /**
          * return cardinal points figured out
          * @param {object} first start point
@@ -96,6 +96,7 @@ if (!window.Asdf.module) {
 
             return NS+WE;
         },
+
         /**
          * return nearest four cardinal points
          * @param {object} first start point
@@ -115,6 +116,7 @@ if (!window.Asdf.module) {
             direction = this._getDuplicatedString(direction, cardinalPoint);
             return direction;
         },
+
         /**
          * return duplicate charters
          * @param {string} str1 compared charters
@@ -142,12 +144,13 @@ if (!window.Asdf.module) {
 
             return dupl;
         },
+
         /**
          * extract type of event
          * @param {object} eventData event data
          * @returns {string}
          * @example
-         * PointDetector.extractType({
+         * $_.module.pointDetector.extractType({
          *      start: 1000,
          *      end: 1100,
          *      list: [
@@ -162,10 +165,10 @@ if (!window.Asdf.module) {
          *      ]
          * });
          */
-        extractType: function(eventData) {
-            var start = eventData.start,
-                end = eventData.end,
-                list = eventData.list,
+        extractType: function(data) {
+            var start = data.start,
+                end = data.end,
+                list = data.list,
                 first = list[0],
                 final = list[list.length - 1],
                 timeDist = end - start,
@@ -173,42 +176,12 @@ if (!window.Asdf.module) {
                 yDist = Math.abs(first.y - final.y);
 
             // compare dist with minDist
-            if (xDist < this.minDist && yDist < this.minDist) {
-                this._detectClickType(timeDist);
-            } else if (timeDist < this.flickTime || xDist > this.flickRange || yDist > this.flickRange) {
-                this.type = 'flick';
+            if (timeDist < this.flickTime || xDist > this.flickRange || yDist > this.flickRange) {
+                return 'flick';
             } else {
-                this.type = 'none';
+                return 'none';
             }
-        },
-        /**
-         * check click or double click
-         * @param {number} timeDist distance from mousedown/touchstart to mouseup/touchend
-         * @returns {*}
-         */
-        _detectClickType: function(timeDist) {
-            var self = this;
-            if (timeDist < this.clickTime) {
-                if (this.clickTimer) {
-                    this.resetTimer();
-                    this.type = 'dbclick';
-                } else {
-                    this.type = 'click';
-                    this.clickTimer = window.setTimeout(function () {
-                        self.resetTimer();
-                    }, this.clickTime);
-                }
-            } else {
-                this.type = 'none';
-            }
-        },
-        /**
-         * clear clickTimer
-         */
-        resetTimer: function() {
-            window.clearTimeout(this.clickTimer);
-            this.clickTimer = null;
         }
-    });
+    };
 
 })(window.Asdf);
