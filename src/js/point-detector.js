@@ -9,7 +9,7 @@ if (!window.Asdf.module) {
 (function($_) {
 
     /**
-     * time is considered flick.
+     * default values.
      */
     var FLICK_DEFAULT_OPTIONS = {
         TIME: 100,
@@ -20,16 +20,15 @@ if (!window.Asdf.module) {
 
     /**
      * To find out it's flick or click or nothing from event datas.
-     * @namespace ne.component.PointDetector
      * @example
-     * var PointDetector = new ne.component.PointDetector({
+     * var PointDetector = new $_.module.PointDetector
      *      flickTime: 300, // time to check flick
      *      flickRange: 250, // range(distance) to check flick
      *      clickTime: 200, // time to check click
      *      minDist: 15 // range(distance) to check movement
      * });
      */
-    $_.module.PointDetector = $_.Base.Class(/** @lends ne.component.PointDetector.prototype */{
+    $_.module.PointDetector = $_.Base.Class(/** @lends $_.module.PointDetector.prototype */{
         /**
          * set options
          * @param {object} option
